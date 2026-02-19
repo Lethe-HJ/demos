@@ -69,3 +69,20 @@ model VerificationToken {
   @@unique([identifier, token])
   @@map("verification_tokens")
 }
+
+// Demo 模型
+model Demo {
+  id          String   @id @default(cuid())
+  category    String   // 一级分类
+  subcategory String   // 二级分类
+  name        String   // 三级标题（demo名称）
+  description String?  // 描述
+  iframeUrl   String   // iframe链接
+  markdownUrl String?  // markdown详细说明链接
+  techStack   String?  // JSON格式的技术栈数组
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category, subcategory])
+  @@map("demos")
+}
