@@ -6,4 +6,3 @@ export async function TopNav() {
 
   return <TopNavClient user={session?.user} />
 }
-

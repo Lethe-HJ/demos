@@ -44,12 +44,14 @@ src/app/
 **文件**: `src/app/login/page.tsx`
 
 **功能**:
+
 - 邮箱密码登录表单
 - Google OAuth 登录按钮（可选）
 - 跳转到注册页链接
 - 登录成功后重定向到 `callbackUrl` 或首页
 
 **组件结构**:
+
 ```typescript
 LoginPage
 ├── LoginForm (客户端组件)
@@ -62,11 +64,13 @@ LoginPage
 ```
 
 **状态管理**:
+
 - 表单状态：`react-hook-form` 管理
 - 错误状态：`useState` 管理错误消息
 - 加载状态：`useState` 管理提交中状态
 
 **表单验证** (Zod Schema):
+
 ```typescript
 const loginSchema = z.object({
   email: z.string().email('请输入有效邮箱'),
@@ -75,6 +79,7 @@ const loginSchema = z.object({
 ```
 
 **登录流程**:
+
 ```mermaid
 flowchart LR
   A[用户输入] --> B[Zod 验证]
@@ -89,11 +94,13 @@ flowchart LR
 **文件**: `src/app/register/page.tsx`
 
 **功能**:
+
 - 注册表单（邮箱、密码、确认密码、可选用户名）
 - 表单验证（邮箱格式、密码强度、两次密码一致）
 - 提交后自动登录或跳转到登录页
 
 **组件结构**:
+
 ```typescript
 RegisterPage
 └── RegisterForm (客户端组件)
@@ -106,20 +113,24 @@ RegisterPage
 ```
 
 **表单验证**:
+
 ```typescript
-const registerSchema = z.object({
-  email: z.string().email('请输入有效邮箱'),
-  password: z.string()
-    .min(8, '密码至少8位')
-    .regex(/[A-Z]/, '密码需包含大写字母')
-    .regex(/[a-z]/, '密码需包含小写字母')
-    .regex(/[0-9]/, '密码需包含数字'),
-  confirmPassword: z.string(),
-  name: z.string().max(100).optional()
-}).refine((data) => data.password === data.confirmPassword, {
-  message: '两次密码不一致',
-  path: ['confirmPassword']
-})
+const registerSchema = z
+  .object({
+    email: z.string().email('请输入有效邮箱'),
+    password: z
+      .string()
+      .min(8, '密码至少8位')
+      .regex(/[A-Z]/, '密码需包含大写字母')
+      .regex(/[a-z]/, '密码需包含小写字母')
+      .regex(/[0-9]/, '密码需包含数字'),
+    confirmPassword: z.string(),
+    name: z.string().max(100).optional()
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: '两次密码不一致',
+    path: ['confirmPassword']
+  })
 ```
 
 #### 2.2.3 个人中心 (`/profile`)
@@ -127,11 +138,13 @@ const registerSchema = z.object({
 **文件**: `src/app/profile/page.tsx`
 
 **功能**:
+
 - 显示当前用户信息（头像、邮箱、名称）
 - 编辑用户资料表单
 - 修改密码表单（仅 Credentials 用户）
 
 **组件结构**:
+
 ```typescript
 ProfilePage (服务端组件)
 ├── ProfileHeader (显示头像、邮箱)
@@ -148,10 +161,12 @@ ProfilePage (服务端组件)
 ```
 
 **权限检查**:
+
 - 在 `layout.tsx` 或 `page.tsx` 中使用 `await auth()` 检查登录状态
 - 未登录时重定向到 `/login?callbackUrl=/profile`
 
 **数据获取**:
+
 - 服务端组件直接调用 `await auth()` 获取 session
 - 表单提交通过 Server Action 更新数据
 
@@ -160,12 +175,14 @@ ProfilePage (服务端组件)
 **文件**: `src/app/admin/users/page.tsx`
 
 **功能**:
+
 - 用户列表表格（分页、搜索、筛选）
 - 编辑用户（内联或弹窗）
 - 删除用户
 - 创建新用户（可选）
 
 **组件结构**:
+
 ```typescript
 AdminUsersPage (服务端组件)
 ├── UsersTable (服务端组件，获取数据)
@@ -184,11 +201,13 @@ AdminUsersPage (服务端组件)
 ```
 
 **状态管理**:
+
 - 列表数据：服务端获取，通过 props 传递
 - 搜索/筛选：客户端状态，提交后重新获取数据（或使用 URL searchParams）
 - 编辑/删除：客户端状态管理对话框显示
 
 **分页与搜索**:
+
 - 使用 URL searchParams 管理分页和搜索状态（符合 Next.js 最佳实践）
 - 或使用 `useState` + Server Action 重新获取数据
 
@@ -266,6 +285,7 @@ export function MyForm() {
 ### 4.1 服务端状态（Session）
 
 **获取方式**:
+
 - 服务端组件：`const session = await auth()`
 - 客户端组件：`useSession()`（需要 SessionProvider）
 
@@ -349,8 +369,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   // ...
   authorized({ auth, request: { nextUrl } }) {
     const isLoggedIn = !!auth?.user
-    const isOnProtectedRoute = nextUrl.pathname.startsWith('/profile') || 
-                                nextUrl.pathname.startsWith('/admin')
+    const isOnProtectedRoute =
+      nextUrl.pathname.startsWith('/profile') ||
+      nextUrl.pathname.startsWith('/admin')
     if (isOnProtectedRoute && !isLoggedIn) {
       return Response.redirect(new URL('/login', nextUrl))
     }

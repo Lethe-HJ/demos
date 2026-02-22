@@ -39,7 +39,9 @@ test.describe('个人资料', () => {
 
   test('访问个人资料页', async ({ page }) => {
     await page.goto('/profile')
-    await expect(page.getByRole('heading', { name: '个人中心' })).toBeVisible({ timeout: 5000 })
+    await expect(page.getByRole('heading', { name: '个人中心' })).toBeVisible({
+      timeout: 5000
+    })
   })
 })
 
@@ -55,6 +57,8 @@ test.describe('管理端用户列表', () => {
   test('管理员可访问用户管理页', async ({ page }) => {
     await page.goto('/admin/users')
     await expect(page).toHaveURL(/\/admin\/users/)
-    await expect(page.getByRole('heading', { name: /用户|管理/ })).toBeVisible({ timeout: 5000 })
+    await expect(page.getByRole('heading', { name: /用户|管理/ })).toBeVisible({
+      timeout: 5000
+    })
   })
 })

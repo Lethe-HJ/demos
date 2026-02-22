@@ -15,23 +15,25 @@
 
 存储用户基本信息。
 
-| 字段名 | 类型 | 约束 | 说明 |
-|--------|------|------|------|
-| id | String | PK, @default(cuid()) | 用户唯一标识 |
-| email | String? | UNIQUE | 邮箱（OAuth 用户可能为空） |
-| emailVerified | DateTime? | - | 邮箱验证时间 |
-| name | String? | - | 显示名称 |
-| image | String? | - | 头像 URL |
-| password | String? | - | 加密后的密码（仅 Credentials 用户） |
-| role | String | @default("USER") | 角色：USER 或 ADMIN |
-| createdAt | DateTime | @default(now()) | 创建时间 |
-| updatedAt | DateTime | @updatedAt | 更新时间 |
+| 字段名        | 类型      | 约束                 | 说明                                |
+| ------------- | --------- | -------------------- | ----------------------------------- |
+| id            | String    | PK, @default(cuid()) | 用户唯一标识                        |
+| email         | String?   | UNIQUE               | 邮箱（OAuth 用户可能为空）          |
+| emailVerified | DateTime? | -                    | 邮箱验证时间                        |
+| name          | String?   | -                    | 显示名称                            |
+| image         | String?   | -                    | 头像 URL                            |
+| password      | String?   | -                    | 加密后的密码（仅 Credentials 用户） |
+| role          | String    | @default("USER")     | 角色：USER 或 ADMIN                 |
+| createdAt     | DateTime  | @default(now())      | 创建时间                            |
+| updatedAt     | DateTime  | @updatedAt           | 更新时间                            |
 
 **索引**:
+
 - `email` 唯一索引（用于快速查找）
 - `role` 普通索引（用于管理员查询）
 
 **关系**:
+
 - 一对多：`accounts`（Account[]）
 - 一对多：`sessions`（Session[]）
 
@@ -39,64 +41,72 @@
 
 存储 OAuth 提供商账户信息（Google、GitHub 等）。
 
-| 字段名 | 类型 | 约束 | 说明 |
-|--------|------|------|------|
-| id | String | PK, @default(cuid()) | 账户 ID |
-| userId | String | FK → User.id | 关联的用户 ID |
-| type | String | - | 账户类型：oauth、credentials 等 |
-| provider | String | - | 提供商：google、credentials 等 |
-| providerAccountId | String | - | 提供商账户 ID |
-| refresh_token | String? | @db.Text | OAuth 刷新令牌 |
-| access_token | String? | @db.Text | OAuth 访问令牌 |
-| expires_at | Int? | - | 令牌过期时间（Unix 时间戳） |
-| token_type | String? | - | 令牌类型：Bearer 等 |
-| scope | String? | - | OAuth 权限范围 |
-| id_token | String? | @db.Text | OpenID Connect ID Token |
-| session_state | String? | - | OAuth 会话状态 |
+| 字段名            | 类型    | 约束                 | 说明                            |
+| ----------------- | ------- | -------------------- | ------------------------------- |
+| id                | String  | PK, @default(cuid()) | 账户 ID                         |
+| userId            | String  | FK → User.id         | 关联的用户 ID                   |
+| type              | String  | -                    | 账户类型：oauth、credentials 等 |
+| provider          | String  | -                    | 提供商：google、credentials 等  |
+| providerAccountId | String  | -                    | 提供商账户 ID                   |
+| refresh_token     | String? | @db.Text             | OAuth 刷新令牌                  |
+| access_token      | String? | @db.Text             | OAuth 访问令牌                  |
+| expires_at        | Int?    | -                    | 令牌过期时间（Unix 时间戳）     |
+| token_type        | String? | -                    | 令牌类型：Bearer 等             |
+| scope             | String? | -                    | OAuth 权限范围                  |
+| id_token          | String? | @db.Text             | OpenID Connect ID Token         |
+| session_state     | String? | -                    | OAuth 会话状态                  |
 
 **复合唯一索引**:
+
 - `(provider, providerAccountId)` - 同一提供商下账户唯一
 
 **关系**:
+
 - 多对一：`user`（User）
 
 **外键约束**:
+
 - `onDelete: Cascade` - 删除用户时自动删除关联账户
 
 ### 2.3 Session（会话表）
 
 存储用户登录会话信息。
 
-| 字段名 | 类型 | 约束 | 说明 |
-|--------|------|------|------|
-| id | String | PK, @default(cuid()) | 会话 ID |
-| sessionToken | String | UNIQUE | 会话令牌（用于 cookie） |
-| userId | String | FK → User.id | 关联的用户 ID |
-| expires | DateTime | - | 过期时间 |
+| 字段名       | 类型     | 约束                 | 说明                    |
+| ------------ | -------- | -------------------- | ----------------------- |
+| id           | String   | PK, @default(cuid()) | 会话 ID                 |
+| sessionToken | String   | UNIQUE               | 会话令牌（用于 cookie） |
+| userId       | String   | FK → User.id         | 关联的用户 ID           |
+| expires      | DateTime | -                    | 过期时间                |
 
 **索引**:
+
 - `sessionToken` 唯一索引（用于快速查找会话）
 
 **关系**:
+
 - 多对一：`user`（User）
 
 **外键约束**:
+
 - `onDelete: Cascade` - 删除用户时自动删除所有会话
 
 ### 2.4 VerificationToken（验证令牌表）
 
 存储邮箱验证、密码重置等临时令牌。
 
-| 字段名 | 类型 | 约束 | 说明 |
-|--------|------|------|------|
-| identifier | String | - | 标识符（如邮箱） |
-| token | String | - | 验证令牌 |
-| expires | DateTime | - | 过期时间 |
+| 字段名     | 类型     | 约束 | 说明             |
+| ---------- | -------- | ---- | ---------------- |
+| identifier | String   | -    | 标识符（如邮箱） |
+| token      | String   | -    | 验证令牌         |
+| expires    | DateTime | -    | 过期时间         |
 
 **复合唯一索引**:
+
 - `(identifier, token)` - 同一标识符下令牌唯一
 
 **用途**:
+
 - 邮箱验证（当前未实现，预留）
 - 密码重置（当前未实现，预留）
 
@@ -126,7 +136,7 @@ model User {
   role          String    @default("USER") // USER 或 ADMIN
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  
+
   accounts      Account[]
   sessions      Session[]
 
@@ -329,10 +339,7 @@ export class PrismaUserRepository implements IUserRepository {
 
     const where = {
       ...(search && {
-        OR: [
-          { email: { contains: search } },
-          { name: { contains: search } }
-        ]
+        OR: [{ email: { contains: search } }, { name: { contains: search } }]
       }),
       ...(role && { role })
     }
@@ -374,7 +381,7 @@ export class PrismaUserRepository implements IUserRepository {
 erDiagram
   User ||--o{ Account : "has"
   User ||--o{ Session : "has"
-  
+
   User {
     string id PK
     string email UK
@@ -385,7 +392,7 @@ erDiagram
     datetime createdAt
     datetime updatedAt
   }
-  
+
   Account {
     string id PK
     string userId FK
@@ -396,14 +403,14 @@ erDiagram
     string access_token
     int expires_at
   }
-  
+
   Session {
     string id PK
     string sessionToken UK
     string userId FK
     datetime expires
   }
-  
+
   VerificationToken {
     string identifier
     string token
@@ -452,11 +459,13 @@ datasource db {
 ```
 
 更新 `.env`:
+
 ```
 DATABASE_URL="postgresql://user:password@localhost:5432/dbname"
 ```
 
 运行迁移:
+
 ```bash
 npx prisma migrate dev
 ```

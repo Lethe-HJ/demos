@@ -17,12 +17,15 @@ if (typeof window === 'undefined') {
 }
 
 // 确保 DATABASE_URL 始终有值
-const dbUrl = typeof process !== 'undefined' ? (process.env.DATABASE_URL || 'file:./prisma/dev.db') : 'file:./prisma/dev.db'
+const dbUrl =
+  typeof process !== 'undefined'
+    ? process.env.DATABASE_URL || 'file:./prisma/dev.db'
+    : 'file:./prisma/dev.db'
 if (typeof process !== 'undefined') {
   process.env.DATABASE_URL = dbUrl
 }
 if (typeof globalThis !== 'undefined') {
-  (globalThis as any).DATABASE_URL = dbUrl
+  ;(globalThis as any).DATABASE_URL = dbUrl
 }
 
 // 调试信息（开发环境）
@@ -56,7 +59,9 @@ function createNextAuth() {
           }
 
           // 通过仓储查找用户
-          const user = await userRepository.findByEmail(credentials.email as string)
+          const user = await userRepository.findByEmail(
+            credentials.email as string
+          )
           if (!user || !user.password) {
             return null
           }
@@ -119,6 +124,5 @@ function createNextAuth() {
 }
 
 // 导出 NextAuth 实例（只在服务端）
-export const { handlers, auth, signIn, signOut } = typeof window === 'undefined'
-  ? createNextAuth()
-  : ({} as any)
+export const { handlers, auth, signIn, signOut } =
+  typeof window === 'undefined' ? createNextAuth() : ({} as any)

@@ -21,9 +21,9 @@ export function ExamplesSidebar({ categories }: ExamplesSidebarProps) {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
     new Set(category ? [category] : [])
   )
-  const [expandedSubcategories, setExpandedSubcategories] = useState<Set<string>>(
-    new Set(subcategory ? [`${category}-${subcategory}`] : [])
-  )
+  const [expandedSubcategories, setExpandedSubcategories] = useState<
+    Set<string>
+  >(new Set(subcategory ? [`${category}-${subcategory}`] : []))
 
   const toggleCategory = (catName: string) => {
     const newExpanded = new Set(expandedCategories)
@@ -84,7 +84,9 @@ export function ExamplesSidebar({ categories }: ExamplesSidebarProps) {
                       return (
                         <div key={subcat.name} className="mb-1">
                           <button
-                            onClick={() => toggleSubcategory(cat.category, subcat.name)}
+                            onClick={() =>
+                              toggleSubcategory(cat.category, subcat.name)
+                            }
                             className={cn(
                               'w-full flex items-center justify-between px-3 py-2 rounded-md text-sm hover:bg-accent transition-colors',
                               subcategory === subcat.name && 'bg-accent'
@@ -102,10 +104,17 @@ export function ExamplesSidebar({ categories }: ExamplesSidebarProps) {
                               {subcat.demos.map((demo) => (
                                 <button
                                   key={demo.id}
-                                  onClick={() => selectDemo(cat.category, subcat.name, demo.id)}
+                                  onClick={() =>
+                                    selectDemo(
+                                      cat.category,
+                                      subcat.name,
+                                      demo.id
+                                    )
+                                  }
                                   className={cn(
                                     'w-full text-left px-3 py-1.5 rounded-md text-sm hover:bg-accent transition-colors',
-                                    demoId === demo.id && 'bg-accent font-medium'
+                                    demoId === demo.id &&
+                                      'bg-accent font-medium'
                                   )}
                                 >
                                   {demo.name}

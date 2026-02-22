@@ -143,7 +143,10 @@ export function EditUserDialog({ user }: EditUserDialogProps) {
                 <FormItem>
                   <FormLabel>头像 URL</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://example.com/avatar.jpg" {...field} />
+                    <Input
+                      placeholder="https://example.com/avatar.jpg"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -7,6 +7,7 @@
 ### 1. [HTTP 接口设计](./01-http-api-design.md)
 
 描述所有 HTTP 端点和 Server Actions：
+
 - Auth.js 自动生成的认证端点
 - Server Actions（注册、更新资料、修改密码、管理员操作等）
 - 错误响应格式
@@ -16,6 +17,7 @@
 ### 2. [数据库设计](./02-database-design.md)
 
 描述数据库结构和数据访问层：
+
 - 数据模型（User、Account、Session、VerificationToken）
 - Prisma Schema 完整定义
 - 领域类型（与 ORM 解耦）
@@ -26,6 +28,7 @@
 ### 3. [前端逻辑设计](./03-frontend-design.md)
 
 描述前端架构和组件设计：
+
 - 页面结构和路由
 - 组件设计（表单、表格、对话框等）
 - 状态管理（服务端和客户端）
@@ -36,6 +39,7 @@
 ### 4. [后端逻辑设计](./04-backend-design.md)
 
 描述后端架构和业务逻辑：
+
 - 架构层次（Server Actions、业务逻辑层、数据访问层）
 - 数据访问层完整实现（接口、Prisma 实现、导出）
 - Auth.js 配置

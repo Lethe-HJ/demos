@@ -84,7 +84,10 @@ export function ProfileForm({ defaultValues, onSubmit }: ProfileFormProps) {
             <FormItem>
               <FormLabel>头像 URL</FormLabel>
               <FormControl>
-                <Input placeholder="https://example.com/avatar.jpg" {...field} />
+                <Input
+                  placeholder="https://example.com/avatar.jpg"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -92,9 +95,7 @@ export function ProfileForm({ defaultValues, onSubmit }: ProfileFormProps) {
         />
 
         {error && (
-          <div className="text-sm text-red-600 dark:text-red-400">
-            {error}
-          </div>
+          <div className="text-sm text-red-600 dark:text-red-400">{error}</div>
         )}
 
         {success && (

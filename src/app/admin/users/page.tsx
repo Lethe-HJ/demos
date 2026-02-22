@@ -44,13 +44,17 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
         </CardHeader>
         <CardContent>
           <UsersTable
-            initialData={result.success ? result : {
-              users: [],
-              total: 0,
-              page: 1,
-              pageSize: 10,
-              totalPages: 0
-            }}
+            initialData={
+              result.success
+                ? result
+                : {
+                    users: [],
+                    total: 0,
+                    page: 1,
+                    pageSize: 10,
+                    totalPages: 0
+                  }
+            }
             currentPage={page}
             currentPageSize={pageSize}
             currentSearch={search}

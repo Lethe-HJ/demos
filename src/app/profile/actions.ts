@@ -70,7 +70,10 @@ export async function changePassword(data: unknown) {
     }
 
     // 验证旧密码
-    const isValid = await bcrypt.compare(validated.currentPassword, user.password)
+    const isValid = await bcrypt.compare(
+      validated.currentPassword,
+      user.password
+    )
     if (!isValid) {
       return {
         success: false,

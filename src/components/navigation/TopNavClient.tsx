@@ -44,7 +44,11 @@ export function TopNavClient({ user }: TopNavClientProps) {
             案例集锦
           </Link>
           <div className="flex items-center gap-6">
-            <Tabs value={getActiveTab()} onValueChange={handleTabChange} className="w-auto">
+            <Tabs
+              value={getActiveTab()}
+              onValueChange={handleTabChange}
+              className="w-auto"
+            >
               <TabsList>
                 <TabsTrigger value="examples">示例</TabsTrigger>
                 {user && (

@@ -30,4 +30,3 @@ Expose and document the key performance knobs:
 - max particles processed per frame
 - spatial grid cell size
 - neighbor count limit
-

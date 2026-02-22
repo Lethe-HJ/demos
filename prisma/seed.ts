@@ -24,12 +24,12 @@ function getDatabasePath() {
     throw new Error('DATABASE_URL must be a valid string')
   }
   let dbPath = dbUrl.replace(/^file:/, '')
-  
+
   // 如果是相对路径，转换为绝对路径
   if (!path.isAbsolute(dbPath)) {
     dbPath = path.join(process.cwd(), dbPath)
   }
-  
+
   // 确保目录存在
   const dbDir = path.dirname(dbPath)
   try {
@@ -37,7 +37,7 @@ function getDatabasePath() {
   } catch (err) {
     // 目录可能已存在，忽略错误
   }
-  
+
   return dbPath
 }
 

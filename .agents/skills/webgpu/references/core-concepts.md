@@ -32,4 +32,3 @@ Encode compute passes and render passes. The order you encode is the order the G
 - Ping-pong textures or buffers
 - Read from and write to different resources
 - Insert readbacks or copy commands
-

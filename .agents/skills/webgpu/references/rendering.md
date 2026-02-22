@@ -19,4 +19,3 @@ For large numbers of similar objects (particles, lines), use instancing and keep
 ### Color + depth
 
 If you do 3D rendering, add a depth attachment. For 2D systems, skip depth to reduce overhead.
-

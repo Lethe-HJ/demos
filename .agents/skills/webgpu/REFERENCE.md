@@ -3,12 +3,12 @@
 ## Device + context
 
 ```ts
-const adapter = await navigator.gpu?.requestAdapter();
-if (!adapter) throw new Error("WebGPU not supported");
-const device = await adapter.requestDevice();
-const context = canvas.getContext("webgpu");
-const format = navigator.gpu.getPreferredCanvasFormat();
-context.configure({ device, format, alphaMode: "premultiplied" });
+const adapter = await navigator.gpu?.requestAdapter()
+if (!adapter) throw new Error('WebGPU not supported')
+const device = await adapter.requestDevice()
+const context = canvas.getContext('webgpu')
+const format = navigator.gpu.getPreferredCanvasFormat()
+context.configure({ device, format, alphaMode: 'premultiplied' })
 ```
 
 ## Buffer creation
@@ -17,8 +17,8 @@ context.configure({ device, format, alphaMode: "premultiplied" });
 const buffer = device.createBuffer({
   size: byteLength,
   usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
-  mappedAtCreation: false,
-});
+  mappedAtCreation: false
+})
 ```
 
 ## Uniform packing
@@ -36,16 +36,16 @@ struct Params {
 
 ```ts
 // v0 = [x, y, z, w], v1 = [a, b, c, d]
-const u = new Float32Array(8);
-u[0] = x;
-u[1] = y;
-u[2] = z;
-u[3] = w;
-u[4] = a;
-u[5] = b;
-u[6] = c;
-u[7] = d;
-device.queue.writeBuffer(uniformBuffer, 0, u);
+const u = new Float32Array(8)
+u[0] = x
+u[1] = y
+u[2] = z
+u[3] = w
+u[4] = a
+u[5] = b
+u[6] = c
+u[7] = d
+device.queue.writeBuffer(uniformBuffer, 0, u)
 ```
 
 This reduces bind group bindings and keeps alignment predictable.
@@ -53,37 +53,39 @@ This reduces bind group bindings and keeps alignment predictable.
 ## Pipeline setup
 
 ```ts
-const module = device.createShaderModule({ code: wgslSource });
+const module = device.createShaderModule({ code: wgslSource })
 const pipeline = device.createComputePipeline({
-  layout: "auto",
-  compute: { module, entryPoint: "main" },
-});
+  layout: 'auto',
+  compute: { module, entryPoint: 'main' }
+})
 ```
 
 ## Dispatch
 
 ```ts
-const encoder = device.createCommandEncoder();
-const pass = encoder.beginComputePass();
-pass.setPipeline(pipeline);
-pass.setBindGroup(0, bindGroup);
-pass.dispatchWorkgroups(workgroupsX, workgroupsY, workgroupsZ);
-pass.end();
-device.queue.submit([encoder.finish()]);
+const encoder = device.createCommandEncoder()
+const pass = encoder.beginComputePass()
+pass.setPipeline(pipeline)
+pass.setBindGroup(0, bindGroup)
+pass.dispatchWorkgroups(workgroupsX, workgroupsY, workgroupsZ)
+pass.end()
+device.queue.submit([encoder.finish()])
 ```
 
 ## Render pass
 
 ```ts
-const view = context.getCurrentTexture().createView();
+const view = context.getCurrentTexture().createView()
 const pass = encoder.beginRenderPass({
-  colorAttachments: [{
-    view,
-    clearValue: { r: 0, g: 0, b: 0, a: 1 },
-    loadOp: "clear",
-    storeOp: "store",
-  }],
-});
+  colorAttachments: [
+    {
+      view,
+      clearValue: { r: 0, g: 0, b: 0, a: 1 },
+      loadOp: 'clear',
+      storeOp: 'store'
+    }
+  ]
+})
 ```
 
 ## Readback (avoid in hot paths)
@@ -91,12 +93,12 @@ const pass = encoder.beginRenderPass({
 ```ts
 const readBuffer = device.createBuffer({
   size: byteLength,
-  usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
-});
-encoder.copyBufferToBuffer(srcBuffer, 0, readBuffer, 0, byteLength);
-device.queue.submit([encoder.finish()]);
-await readBuffer.mapAsync(GPUMapMode.READ);
-const data = readBuffer.getMappedRange();
+  usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ
+})
+encoder.copyBufferToBuffer(srcBuffer, 0, readBuffer, 0, byteLength)
+device.queue.submit([encoder.finish()])
+await readBuffer.mapAsync(GPUMapMode.READ)
+const data = readBuffer.getMappedRange()
 ```
 
 ## Common pitfalls
@@ -105,4 +107,3 @@ const data = readBuffer.getMappedRange();
 - Keep bind group layouts stable to avoid pipeline rebuilds.
 - Use ping-pong textures/buffers for multi-pass effects.
 - Keep readbacks to bounded results (small buffers).
-

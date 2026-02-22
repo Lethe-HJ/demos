@@ -17,4 +17,3 @@ Pick the approach that matches your product goals:
 - Keep CPU and GPU codepaths in sync for scale and units if you provide fallback.
 - Document feature availability for modules that do not support all runtimes.
 - Add a feature probe in UI to display the active mode.
-

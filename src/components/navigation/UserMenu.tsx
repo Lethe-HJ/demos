@@ -37,7 +37,7 @@ export function UserMenu({ user }: UserMenuProps) {
   const initials = user.name
     ? user.name
         .split(' ')
-        .map(n => n[0])
+        .map((n) => n[0])
         .join('')
         .toUpperCase()
         .slice(0, 2)
@@ -48,7 +48,10 @@ export function UserMenu({ user }: UserMenuProps) {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-10 w-10 rounded-full">
           <Avatar className="h-10 w-10">
-            <AvatarImage src={user.image || undefined} alt={user.name || user.email || ''} />
+            <AvatarImage
+              src={user.image || undefined}
+              alt={user.name || user.email || ''}
+            />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
         </Button>

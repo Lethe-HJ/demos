@@ -10,14 +10,14 @@ Auth.js 会自动处理以下端点，无需手动实现：
 
 ### 1.1 认证相关端点
 
-| 方法 | 路径 | 说明 | 请求体 | 响应 |
-|------|------|------|--------|------|
-| GET | `/api/auth/signin` | 获取登录页面（可选，通常使用自定义页面） | - | HTML 页面 |
-| POST | `/api/auth/signin/:provider` | 登录（Credentials 或 OAuth） | `{ email, password }` 或 OAuth 回调参数 | 302 重定向或 JSON |
-| POST | `/api/auth/signout` | 登出 | - | 302 重定向 |
-| GET | `/api/auth/session` | 获取当前会话 | - | `{ user: {...}, expires: "..." }` |
-| GET | `/api/auth/callback/:provider` | OAuth 回调（如 Google） | OAuth 回调参数 | 302 重定向 |
-| GET | `/api/auth/providers` | 获取可用认证提供商列表 | - | `{ credentials: {...}, google: {...} }` |
+| 方法 | 路径                           | 说明                                     | 请求体                                  | 响应                                    |
+| ---- | ------------------------------ | ---------------------------------------- | --------------------------------------- | --------------------------------------- |
+| GET  | `/api/auth/signin`             | 获取登录页面（可选，通常使用自定义页面） | -                                       | HTML 页面                               |
+| POST | `/api/auth/signin/:provider`   | 登录（Credentials 或 OAuth）             | `{ email, password }` 或 OAuth 回调参数 | 302 重定向或 JSON                       |
+| POST | `/api/auth/signout`            | 登出                                     | -                                       | 302 重定向                              |
+| GET  | `/api/auth/session`            | 获取当前会话                             | -                                       | `{ user: {...}, expires: "..." }`       |
+| GET  | `/api/auth/callback/:provider` | OAuth 回调（如 Google）                  | OAuth 回调参数                          | 302 重定向                              |
+| GET  | `/api/auth/providers`          | 获取可用认证提供商列表                   | -                                       | `{ credentials: {...}, google: {...} }` |
 
 **实现位置**: `src/app/api/auth/[...nextauth]/route.ts`
 
@@ -44,17 +44,20 @@ export async function registerUser(data: {
 ```
 
 **输入验证**:
+
 - `email`: 必填，有效邮箱格式
 - `password`: 必填，最小长度 8 字符
 - `name`: 可选，最大长度 100 字符
 
 **业务逻辑**:
+
 1. 检查邮箱是否已存在（通过 `userRepository.findByEmail`）
 2. 使用 `bcrypt.hash` 加密密码
 3. 调用 `userRepository.create` 创建用户
 4. 可选：自动登录（调用 `signIn("credentials", ...)`）
 
 **错误处理**:
+
 - `EMAIL_EXISTS`: 邮箱已存在
 - `VALIDATION_ERROR`: 输入验证失败
 - `DATABASE_ERROR`: 数据库操作失败
@@ -66,10 +69,7 @@ export async function registerUser(data: {
 ```typescript
 'use server'
 
-export async function updateProfile(data: {
-  name?: string
-  image?: string
-}) {
+export async function updateProfile(data: { name?: string; image?: string }) {
   // 返回: { success: boolean, error?: string, user?: User }
 }
 ```
@@ -77,6 +77,7 @@ export async function updateProfile(data: {
 **权限**: 仅能更新当前登录用户自己的资料
 
 **业务逻辑**:
+
 1. 从 `auth()` 获取当前用户 session
 2. 验证用户已登录
 3. 调用 `userRepository.update(session.user.id, data)`
@@ -99,6 +100,7 @@ export async function changePassword(data: {
 **权限**: 仅 Credentials 用户可用，仅能修改自己的密码
 
 **业务逻辑**:
+
 1. 从 `auth()` 获取当前用户 session
 2. 通过 `userRepository.findByEmail` 获取用户（含 password）
 3. 使用 `bcrypt.compare` 校验旧密码
@@ -106,6 +108,7 @@ export async function changePassword(data: {
 5. 调用 `userRepository.update` 更新密码
 
 **错误处理**:
+
 - `UNAUTHORIZED`: 用户未登录
 - `INVALID_PASSWORD`: 旧密码错误
 - `OAUTH_USER`: OAuth 用户无法修改密码（无 password 字段）
@@ -123,11 +126,11 @@ export async function listUsers(query: {
   search?: string
   role?: 'USER' | 'ADMIN'
 }) {
-  // 返回: { 
-  //   users: User[], 
-  //   total: number, 
-  //   page: number, 
-  //   pageSize: number 
+  // 返回: {
+  //   users: User[],
+  //   total: number,
+  //   page: number,
+  //   pageSize: number
   // }
 }
 ```
@@ -135,12 +138,14 @@ export async function listUsers(query: {
 **权限**: 仅管理员（`role === 'ADMIN'`）
 
 **分页参数**:
+
 - `page`: 页码，从 1 开始，默认 1
 - `pageSize`: 每页数量，默认 10，最大 50
 - `search`: 搜索关键词（匹配 email 或 name）
 - `role`: 按角色过滤
 
 **业务逻辑**:
+
 1. 验证当前用户为管理员
 2. 调用 `userRepository.list(query)`
 
@@ -151,12 +156,15 @@ export async function listUsers(query: {
 ```typescript
 'use server'
 
-export async function updateUser(userId: string, data: {
-  name?: string
-  email?: string
-  role?: 'USER' | 'ADMIN'
-  image?: string
-}) {
+export async function updateUser(
+  userId: string,
+  data: {
+    name?: string
+    email?: string
+    role?: 'USER' | 'ADMIN'
+    image?: string
+  }
+) {
   // 返回: { success: boolean, error?: string, user?: User }
 }
 ```
@@ -164,6 +172,7 @@ export async function updateUser(userId: string, data: {
 **权限**: 仅管理员
 
 **业务逻辑**:
+
 1. 验证当前用户为管理员
 2. 验证目标用户存在
 3. 如果更新 email，检查新邮箱是否已被其他用户使用
@@ -184,11 +193,13 @@ export async function deleteUser(userId: string) {
 **权限**: 仅管理员
 
 **业务逻辑**:
+
 1. 验证当前用户为管理员
 2. 防止删除自己（`userId !== session.user.id`）
 3. 调用 `userRepository.delete(userId)`（外键由数据库 cascade 处理）
 
 **错误处理**:
+
 - `CANNOT_DELETE_SELF`: 不能删除自己
 - `USER_NOT_FOUND`: 用户不存在
 
@@ -212,6 +223,7 @@ export async function createUser(data: {
 **权限**: 仅管理员
 
 **业务逻辑**:
+
 1. 验证当前用户为管理员
 2. 检查邮箱是否已存在
 3. 使用 `bcrypt.hash` 加密密码
@@ -221,20 +233,21 @@ export async function createUser(data: {
 
 ### 3.1 公开路由
 
-| 路径 | 说明 | 组件文件 |
-|------|------|---------|
-| `/` | 首页 | `src/app/page.tsx` |
-| `/login` | 登录页 | `src/app/login/page.tsx` |
+| 路径        | 说明   | 组件文件                    |
+| ----------- | ------ | --------------------------- |
+| `/`         | 首页   | `src/app/page.tsx`          |
+| `/login`    | 登录页 | `src/app/login/page.tsx`    |
 | `/register` | 注册页 | `src/app/register/page.tsx` |
 
 ### 3.2 受保护路由（需登录）
 
-| 路径 | 说明 | 组件文件 | 权限要求 |
-|------|------|---------|---------|
-| `/profile` | 个人中心 | `src/app/profile/page.tsx` | 任何登录用户 |
-| `/admin/users` | 用户管理 | `src/app/admin/users/page.tsx` | 管理员 |
+| 路径           | 说明     | 组件文件                       | 权限要求     |
+| -------------- | -------- | ------------------------------ | ------------ |
+| `/profile`     | 个人中心 | `src/app/profile/page.tsx`     | 任何登录用户 |
+| `/admin/users` | 用户管理 | `src/app/admin/users/page.tsx` | 管理员       |
 
 **路由保护实现**:
+
 - 在 `proxy.ts` 中配置路径匹配规则
 - 在页面组件中使用 `const session = await auth()` 检查登录状态
 - 未登录时重定向到 `/login?callbackUrl=当前路径`
@@ -252,6 +265,7 @@ export async function createUser(data: {
 ```
 
 **错误代码**:
+
 - `VALIDATION_ERROR`: 输入验证失败
 - `UNAUTHORIZED`: 未登录
 - `FORBIDDEN`: 权限不足（非管理员）
@@ -318,6 +332,7 @@ sequenceDiagram
 ### 6.1 Session 获取
 
 **服务端**:
+
 ```typescript
 import { auth } from '@/auth'
 
@@ -328,6 +343,7 @@ if (!session) {
 ```
 
 **客户端**（可选，使用 SessionProvider）:
+
 ```typescript
 'use client'
 import { useSession } from 'next-auth/react'

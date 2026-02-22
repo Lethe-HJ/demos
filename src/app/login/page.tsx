@@ -87,9 +87,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>登录</CardTitle>
-          <CardDescription>
-            使用邮箱密码登录或 Google 账户登录
-          </CardDescription>
+          <CardDescription>使用邮箱密码登录或 Google 账户登录</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -101,7 +99,11 @@ export default function LoginPage() {
                   <FormItem>
                     <FormLabel>邮箱</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="your@email.com" {...field} />
+                      <Input
+                        type="email"
+                        placeholder="your@email.com"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -128,11 +130,7 @@ export default function LoginPage() {
                 </div>
               )}
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? '登录中...' : '登录'}
               </Button>
             </form>

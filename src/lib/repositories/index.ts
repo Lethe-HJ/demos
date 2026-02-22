@@ -18,20 +18,26 @@ if (typeof window === 'undefined') {
 }
 
 // 确保 DATABASE_URL 始终有值
-const dbUrl = typeof process !== 'undefined' ? (process.env.DATABASE_URL || 'file:./prisma/dev.db') : 'file:./prisma/dev.db'
+const dbUrl =
+  typeof process !== 'undefined'
+    ? process.env.DATABASE_URL || 'file:./prisma/dev.db'
+    : 'file:./prisma/dev.db'
 // 强制设置到 process.env（确保全局可用）
 if (typeof process !== 'undefined') {
   process.env.DATABASE_URL = dbUrl
 }
 // 也设置到 globalThis（某些情况下可能需要）
 if (typeof globalThis !== 'undefined') {
-  (globalThis as any).DATABASE_URL = dbUrl
+  ;(globalThis as any).DATABASE_URL = dbUrl
 }
 
 // 调试信息（开发环境）
 if (typeof process !== 'undefined' && process.env.NODE_ENV === 'development') {
   console.log('[repositories] DATABASE_URL:', process.env.DATABASE_URL)
-  console.log('[repositories] process.env keys:', Object.keys(process.env).filter(k => k.includes('DATABASE')))
+  console.log(
+    '[repositories] process.env keys:',
+    Object.keys(process.env).filter((k) => k.includes('DATABASE'))
+  )
 }
 
 // Prisma 客户端单例
@@ -54,12 +60,12 @@ function getDatabasePath() {
     throw new Error('DATABASE_URL must be a valid string')
   }
   let dbPath = dbUrl.replace(/^file:/, '')
-  
+
   // 如果是相对路径，转换为绝对路径
   if (!path.isAbsolute(dbPath)) {
     dbPath = path.join(process.cwd(), dbPath)
   }
-  
+
   // 确保目录存在
   const dbDir = path.dirname(dbPath)
   try {
@@ -67,13 +73,16 @@ function getDatabasePath() {
   } catch (err) {
     // 目录可能已存在，忽略错误
   }
-  
+
   return dbPath
 }
 
 // 确保在创建 PrismaClient 之前环境变量已设置
 // 强制设置 DATABASE_URL（PrismaClient 内部可能需要）
-const finalDbUrl = typeof process !== 'undefined' ? (process.env.DATABASE_URL || 'file:./prisma/dev.db') : 'file:./prisma/dev.db'
+const finalDbUrl =
+  typeof process !== 'undefined'
+    ? process.env.DATABASE_URL || 'file:./prisma/dev.db'
+    : 'file:./prisma/dev.db'
 if (typeof process !== 'undefined') {
   process.env.DATABASE_URL = finalDbUrl
 }
@@ -95,7 +104,10 @@ if (typeof window === 'undefined') {
     globalForPrisma.prisma ||
     new PrismaClient({
       adapter,
-      log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error']
+      log:
+        process.env.NODE_ENV === 'development'
+          ? ['query', 'error', 'warn']
+          : ['error']
     })
 
   if (process.env.NODE_ENV !== 'production') {
@@ -107,13 +119,15 @@ export const prisma = prismaInstance as PrismaClient
 
 // 创建仓储实例（可根据环境变量切换实现）
 // 只在服务端创建仓储实例
-export const userRepository: IUserRepository = typeof window === 'undefined' && prisma
-  ? new PrismaUserRepository(prisma)
-  : ({} as IUserRepository)
+export const userRepository: IUserRepository =
+  typeof window === 'undefined' && prisma
+    ? new PrismaUserRepository(prisma)
+    : ({} as IUserRepository)
 
-export const demoRepository: IDemoRepository = typeof window === 'undefined' && prisma
-  ? new PrismaDemoRepository(prisma)
-  : ({} as IDemoRepository)
+export const demoRepository: IDemoRepository =
+  typeof window === 'undefined' && prisma
+    ? new PrismaDemoRepository(prisma)
+    : ({} as IDemoRepository)
 
 // 未来可扩展：
 // if (process.env.DB_ADAPTER === 'drizzle') {

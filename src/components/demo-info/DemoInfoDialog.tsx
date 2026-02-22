@@ -17,7 +17,11 @@ interface DemoInfoDialogProps {
   onOpenChange: (open: boolean) => void
 }
 
-export function DemoInfoDialog({ demo, open, onOpenChange }: DemoInfoDialogProps) {
+export function DemoInfoDialog({
+  demo,
+  open,
+  onOpenChange
+}: DemoInfoDialogProps) {
   if (!demo) return null
 
   return (

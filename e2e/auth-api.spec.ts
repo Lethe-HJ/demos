@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('Auth API 路由', () => {
-  test('GET /api/auth/providers 返回 200 且含 providers', async ({ request }) => {
+  test('GET /api/auth/providers 返回 200 且含 providers', async ({
+    request
+  }) => {
     const res = await request.get('/api/auth/providers')
     expect(res.status()).toBe(200)
     const body = await res.json()

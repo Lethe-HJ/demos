@@ -45,7 +45,7 @@
 
 ## 3. 镜像源（可选，国内建议配置）
 
-将 npm、yarn  registry 设为淘宝镜像以加速安装：
+将 npm、yarn registry 设为淘宝镜像以加速安装：
 
 ```bash
 npm config set registry https://registry.npmmirror.com

@@ -26,20 +26,22 @@ import {
   FormMessage
 } from '@/components/ui/form'
 
-const registerSchema = z.object({
-  email: z.string().email('请输入有效邮箱'),
-  password: z
-    .string()
-    .min(8, '密码至少8位')
-    .regex(/[A-Z]/, '密码需包含大写字母')
-    .regex(/[a-z]/, '密码需包含小写字母')
-    .regex(/[0-9]/, '密码需包含数字'),
-  confirmPassword: z.string(),
-  name: z.string().max(100).optional()
-}).refine((data) => data.password === data.confirmPassword, {
-  message: '两次密码不一致',
-  path: ['confirmPassword']
-})
+const registerSchema = z
+  .object({
+    email: z.string().email('请输入有效邮箱'),
+    password: z
+      .string()
+      .min(8, '密码至少8位')
+      .regex(/[A-Z]/, '密码需包含大写字母')
+      .regex(/[a-z]/, '密码需包含小写字母')
+      .regex(/[0-9]/, '密码需包含数字'),
+    confirmPassword: z.string(),
+    name: z.string().max(100).optional()
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: '两次密码不一致',
+    path: ['confirmPassword']
+  })
 
 type RegisterFormValues = z.infer<typeof registerSchema>
 
@@ -87,9 +89,7 @@ export default function RegisterPage() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>注册账户</CardTitle>
-          <CardDescription>
-            创建新账户以开始使用
-          </CardDescription>
+          <CardDescription>创建新账户以开始使用</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -101,7 +101,11 @@ export default function RegisterPage() {
                   <FormItem>
                     <FormLabel>邮箱</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="your@email.com" {...field} />
+                      <Input
+                        type="email"
+                        placeholder="your@email.com"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -156,11 +160,7 @@ export default function RegisterPage() {
                 </div>
               )}
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? '注册中...' : '注册'}
               </Button>
             </form>

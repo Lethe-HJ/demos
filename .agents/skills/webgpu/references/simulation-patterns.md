@@ -42,4 +42,3 @@ Each module or stage declares:
 - Which phase or render pass it contributes to.
 
 The orchestrator composes a final pipeline from these descriptors.
-

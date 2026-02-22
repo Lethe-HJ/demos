@@ -64,7 +64,7 @@ export function demoDomainToDemo(demo: DemoDomain): Demo {
 export function organizeDemosToCategories(demos: DemoDomain[]): Category[] {
   const categoryMap = new Map<string, Map<string, Demo[]>>()
 
-  demos.forEach(demoDomain => {
+  demos.forEach((demoDomain) => {
     const demo = demoDomainToDemo(demoDomain)
     const { category, subcategory } = demo
 
@@ -81,13 +81,17 @@ export function organizeDemosToCategories(demos: DemoDomain[]): Category[] {
   })
 
   // 转换为数组格式
-  return Array.from(categoryMap.entries()).map(([category, subcategoryMap]) => ({
-    category,
-    subcategories: Array.from(subcategoryMap.entries()).map(([name, demos]) => ({
-      name,
-      demos
-    }))
-  }))
+  return Array.from(categoryMap.entries()).map(
+    ([category, subcategoryMap]) => ({
+      category,
+      subcategories: Array.from(subcategoryMap.entries()).map(
+        ([name, demos]) => ({
+          name,
+          demos
+        })
+      )
+    })
+  )
 }
 
 // 查找demo（兼容旧接口）
@@ -97,11 +101,11 @@ export function findDemo(
   demoId: string,
   categories: Category[]
 ): Demo | undefined {
-  const cat = categories.find(c => c.category === category)
+  const cat = categories.find((c) => c.category === category)
   if (!cat) return undefined
 
-  const subcat = cat.subcategories.find(s => s.name === subcategory)
+  const subcat = cat.subcategories.find((s) => s.name === subcategory)
   if (!subcat) return undefined
 
-  return subcat.demos.find(d => d.id === demoId)
+  return subcat.demos.find((d) => d.id === demoId)
 }

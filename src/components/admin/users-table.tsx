@@ -43,7 +43,9 @@ export function UsersTable({
   const router = useRouter()
   const searchParams = useSearchParams()
   const [search, setSearch] = useState(currentSearch || '')
-  const [roleFilter, setRoleFilter] = useState<'USER' | 'ADMIN' | ''>(currentRole || '')
+  const [roleFilter, setRoleFilter] = useState<'USER' | 'ADMIN' | ''>(
+    currentRole || ''
+  )
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
   function updateSearchParams(params: Record<string, string | undefined>) {
@@ -110,7 +112,9 @@ export function UsersTable({
         />
         <select
           value={roleFilter}
-          onChange={(e) => setRoleFilter(e.target.value as 'USER' | 'ADMIN' | '')}
+          onChange={(e) =>
+            setRoleFilter(e.target.value as 'USER' | 'ADMIN' | '')
+          }
           className="px-3 py-2 border rounded-md"
         >
           <option value="">全部角色</option>
@@ -135,7 +139,10 @@ export function UsersTable({
           <TableBody>
             {initialData.users.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground">
+                <TableCell
+                  colSpan={5}
+                  className="text-center text-muted-foreground"
+                >
                   暂无用户
                 </TableCell>
               </TableRow>
@@ -173,7 +180,8 @@ export function UsersTable({
       {initialData.totalPages > 1 && (
         <div className="flex items-center justify-between">
           <div className="text-sm text-muted-foreground">
-            共 {initialData.total} 条，第 {currentPage} / {initialData.totalPages} 页
+            共 {initialData.total} 条，第 {currentPage} /{' '}
+            {initialData.totalPages} 页
           </div>
           <div className="flex gap-2">
             <Button

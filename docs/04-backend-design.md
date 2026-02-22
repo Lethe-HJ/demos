@@ -24,7 +24,7 @@ flowchart TB
   subgraph db [数据库]
     SQLite[(SQLite)]
   end
-  
+
   Pages --> Actions
   Forms --> Actions
   Actions --> Auth
@@ -88,10 +88,10 @@ export interface UpdateUserInput {
 
 // 列表查询参数
 export interface ListUsersQuery {
-  page?: number      // 页码，从 1 开始
-  pageSize?: number  // 每页数量
-  search?: string    // 搜索关键词（email 或 name）
-  role?: UserRole    // 角色过滤
+  page?: number // 页码，从 1 开始
+  pageSize?: number // 每页数量
+  search?: string // 搜索关键词（email 或 name）
+  role?: UserRole // 角色过滤
 }
 
 // 列表查询结果
@@ -227,14 +227,14 @@ export class PrismaUserRepository implements IUserRepository {
     const skip = (page - 1) * pageSize
 
     const where: any = {}
-    
+
     if (search) {
       where.OR = [
         { email: { contains: search } },
         { name: { contains: search } }
       ]
     }
-    
+
     if (role) {
       where.role = role
     }
@@ -305,7 +305,10 @@ const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
 export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
-    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error']
+    log:
+      process.env.NODE_ENV === 'development'
+        ? ['query', 'error', 'warn']
+        : ['error']
   })
 
 if (process.env.NODE_ENV !== 'production') {
@@ -338,7 +341,7 @@ import bcrypt from 'bcryptjs'
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  
+
   providers: [
     // Credentials 提供商（邮箱密码）
     Credentials({
@@ -353,7 +356,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         // 通过仓储查找用户
-        const user = await userRepository.findByEmail(credentials.email as string)
+        const user = await userRepository.findByEmail(
+          credentials.email as string
+        )
         if (!user || !user.password) {
           return null
         }
@@ -588,7 +593,10 @@ export async function changePassword(data: unknown) {
     }
 
     // 验证旧密码
-    const isValid = await bcrypt.compare(validated.currentPassword, user.password)
+    const isValid = await bcrypt.compare(
+      validated.currentPassword,
+      user.password
+    )
     if (!isValid) {
       return {
         success: false,
@@ -896,7 +904,7 @@ export async function createUser(data: unknown) {
 // src/lib/services/user-service.ts
 export class UserService {
   constructor(private userRepository: IUserRepository) {}
-  
+
   async registerUser(data: CreateUserInput) {
     // 复杂业务逻辑
   }

@@ -14,4 +14,3 @@ WebGPU is useful for a broad range of workloads that benefit from parallel execu
 - Use **compute** for large parallel workloads with heavy data movement.
 - Use **render** pipelines when rasterization is the core step.
 - Combine both when you need compute pre-processing and render post-processing.
-

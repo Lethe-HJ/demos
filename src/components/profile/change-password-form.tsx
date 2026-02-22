@@ -15,19 +15,21 @@ import {
   FormMessage
 } from '@/components/ui/form'
 
-const changePasswordSchema = z.object({
-  currentPassword: z.string().min(1, '请输入当前密码'),
-  newPassword: z
-    .string()
-    .min(8, '新密码至少8位')
-    .regex(/[A-Z]/, '密码需包含大写字母')
-    .regex(/[a-z]/, '密码需包含小写字母')
-    .regex(/[0-9]/, '密码需包含数字'),
-  confirmPassword: z.string()
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  message: '两次密码不一致',
-  path: ['confirmPassword']
-})
+const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, '请输入当前密码'),
+    newPassword: z
+      .string()
+      .min(8, '新密码至少8位')
+      .regex(/[A-Z]/, '密码需包含大写字母')
+      .regex(/[a-z]/, '密码需包含小写字母')
+      .regex(/[0-9]/, '密码需包含数字'),
+    confirmPassword: z.string()
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: '两次密码不一致',
+    path: ['confirmPassword']
+  })
 
 type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>
 
@@ -119,9 +121,7 @@ export function ChangePasswordForm({ onSubmit }: ChangePasswordFormProps) {
         />
 
         {error && (
-          <div className="text-sm text-red-600 dark:text-red-400">
-            {error}
-          </div>
+          <div className="text-sm text-red-600 dark:text-red-400">{error}</div>
         )}
 
         {success && (

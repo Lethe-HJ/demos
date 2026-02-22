@@ -31,4 +31,3 @@ This keeps WGSL readable and makes it easier to insert extra passes.
 ### Neighborhood queries
 
 If you need local context, maintain a spatial grid or tiled buffers on the GPU. This avoids O(n^2) scans and is scalable for large grids or particle counts.
-
