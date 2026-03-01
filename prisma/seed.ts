@@ -52,9 +52,9 @@ const prisma = new PrismaClient({
 })
 
 async function main() {
-  // 创建默认管理员账户
-  const adminEmail = 'admin@example.com'
-  const adminPassword = 'Admin123456' // 请在生产环境中修改此密码
+  // 创建默认管理员账户（从 .env.local 的 ADMIN_EMAIL / ADMIN_PASSWORD 读取）
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com'
+  const adminPassword = process.env.ADMIN_PASSWORD || 'Admin123456'
 
   // 检查管理员是否已存在
   const existingAdmin = await prisma.user.findUnique({
