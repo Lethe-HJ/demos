@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { signIn } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
@@ -33,7 +33,6 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>
 
 export default function LoginPage() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -62,8 +61,9 @@ export default function LoginPage() {
       if (result?.error) {
         setError('邮箱或密码错误')
       } else if (result?.ok) {
-        router.push(callbackUrl)
-        router.refresh()
+        // 全页跳转确保服务端 layout 能读到新 session，右上角才能正确显示
+        window.location.href = callbackUrl
+        return
       }
     } catch (err) {
       setError('登录失败，请稍后重试')

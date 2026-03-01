@@ -95,7 +95,7 @@ function createNextAuth() {
     ],
 
     session: {
-      strategy: 'database' // 使用数据库会话
+      strategy: 'jwt' // Credentials 提供商仅支持 JWT，不支持 database
     },
 
     pages: {
@@ -103,19 +103,17 @@ function createNextAuth() {
     },
 
     callbacks: {
-      // 在 session 中添加 role
-      async session({ session, user }) {
-        if (session.user && user) {
-          const { prisma: prismaInstance } = require('@/lib/repositories')
-          session.user.id = user.id
-          // 从数据库获取最新的 role
-          const dbUser = await prismaInstance.user.findUnique({
-            where: { id: user.id },
-            select: { role: true }
-          })
-          if (dbUser) {
-            session.user.role = dbUser.role as 'USER' | 'ADMIN'
-          }
+      jwt: async ({ token, user }) => {
+        if (user) {
+          token.id = user.id
+          token.role = user.role
+        }
+        return token
+      },
+      session: async ({ session, token }) => {
+        if (session.user) {
+          session.user.id = token.id ?? token.sub!
+          session.user.role = token.role as 'USER' | 'ADMIN'
         }
         return session
       }

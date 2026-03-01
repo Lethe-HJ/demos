@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { registerUser } from './actions'
 import { Button } from '@/components/ui/button'
@@ -46,7 +45,6 @@ const registerSchema = z
 type RegisterFormValues = z.infer<typeof registerSchema>
 
 export default function RegisterPage() {
-  const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -72,8 +70,7 @@ export default function RegisterPage() {
       })
 
       if (result.success) {
-        router.push('/')
-        router.refresh()
+        window.location.href = '/'
       } else {
         setError(result.error || '注册失败')
       }

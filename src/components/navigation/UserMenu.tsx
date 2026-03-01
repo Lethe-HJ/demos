@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -23,7 +24,19 @@ interface UserMenuProps {
   }
 }
 
-export function UserMenu({ user }: UserMenuProps) {
+export function UserMenu({ user: userProp }: UserMenuProps) {
+  const { data: session, status } = useSession()
+  // 优先用客户端 session（登录后即时更新），否则用服务端传入的 user
+  const user = session?.user ?? userProp
+
+  if (status === 'loading') {
+    return (
+      <Button variant="ghost" size="sm" className="invisible">
+        登录
+      </Button>
+    )
+  }
+
   if (!user) {
     return (
       <Link href="/login">

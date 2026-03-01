@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { UserMenu } from './UserMenu'
 
@@ -14,7 +15,9 @@ interface TopNavClientProps {
   }
 }
 
-export function TopNavClient({ user }: TopNavClientProps) {
+export function TopNavClient({ user: userProp }: TopNavClientProps) {
+  const { data: session } = useSession()
+  const user = session?.user ?? userProp
   const pathname = usePathname()
   const router = useRouter()
 
