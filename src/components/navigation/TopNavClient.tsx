@@ -35,7 +35,7 @@ export function TopNavClient({ user: userProp }: TopNavClientProps) {
     } else if (value === 'profile') {
       router.push('/profile')
     } else if (value === 'admin') {
-      router.push('/admin/users')
+      router.push('/admin/users') // 后台管理默认进入用户管理
     }
   }
 
@@ -58,7 +58,7 @@ export function TopNavClient({ user: userProp }: TopNavClientProps) {
                   <>
                     <TabsTrigger value="profile">个人中心</TabsTrigger>
                     {user.role === 'ADMIN' && (
-                      <TabsTrigger value="admin">用户管理</TabsTrigger>
+                      <TabsTrigger value="admin">后台管理</TabsTrigger>
                     )}
                   </>
                 )}

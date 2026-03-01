@@ -12,20 +12,23 @@ export interface DemoDomain {
   updatedAt: Date
 }
 
+// 创建/更新 Demo 的 payload（不含 id、createdAt、updatedAt）
+export type DemoCreateInput = Omit<
+  DemoDomain,
+  'id' | 'createdAt' | 'updatedAt'
+>
+export type DemoUpdateInput = Partial<DemoCreateInput>
+
 // Demo 仓储接口
 export interface IDemoRepository {
-  // 查找所有demo
   findAll(): Promise<DemoDomain[]>
-
-  // 根据分类查找
   findByCategory(category: string): Promise<DemoDomain[]>
-
-  // 根据分类和子分类查找
   findByCategoryAndSubcategory(
     category: string,
     subcategory: string
   ): Promise<DemoDomain[]>
-
-  // 根据ID查找
   findById(id: string): Promise<DemoDomain | null>
+  create(data: DemoCreateInput): Promise<DemoDomain>
+  update(id: string, data: DemoUpdateInput): Promise<DemoDomain>
+  delete(id: string): Promise<void>
 }

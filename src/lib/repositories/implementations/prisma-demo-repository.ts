@@ -1,5 +1,10 @@
 import type { PrismaClient } from '@prisma/client'
-import type { IDemoRepository, DemoDomain } from '../demo-repository'
+import type {
+  IDemoRepository,
+  DemoDomain,
+  DemoCreateInput,
+  DemoUpdateInput
+} from '../demo-repository'
 
 export class PrismaDemoRepository implements IDemoRepository {
   constructor(private prisma: PrismaClient) {}
@@ -116,6 +121,56 @@ export class PrismaDemoRepository implements IDemoRepository {
       }
       throw error
     }
+  }
+
+  async create(data: DemoCreateInput): Promise<DemoDomain> {
+    if (!this.prisma.demo) {
+      throw new Error(
+        '[PrismaDemoRepository] Demo model not found. Run: npx prisma generate'
+      )
+    }
+    const demo = await this.prisma.demo.create({
+      data: {
+        category: data.category,
+        subcategory: data.subcategory,
+        name: data.name,
+        description: data.description ?? null,
+        iframeUrl: data.iframeUrl,
+        markdownUrl: data.markdownUrl ?? null,
+        techStack: data.techStack ?? null
+      }
+    })
+    return this.toDomain(demo)
+  }
+
+  async update(id: string, data: DemoUpdateInput): Promise<DemoDomain> {
+    if (!this.prisma.demo) {
+      throw new Error(
+        '[PrismaDemoRepository] Demo model not found. Run: npx prisma generate'
+      )
+    }
+    const demo = await this.prisma.demo.update({
+      where: { id },
+      data: {
+        ...(data.category != null && { category: data.category }),
+        ...(data.subcategory != null && { subcategory: data.subcategory }),
+        ...(data.name != null && { name: data.name }),
+        ...(data.description !== undefined && { description: data.description }),
+        ...(data.iframeUrl != null && { iframeUrl: data.iframeUrl }),
+        ...(data.markdownUrl !== undefined && { markdownUrl: data.markdownUrl }),
+        ...(data.techStack !== undefined && { techStack: data.techStack })
+      }
+    })
+    return this.toDomain(demo)
+  }
+
+  async delete(id: string): Promise<void> {
+    if (!this.prisma.demo) {
+      throw new Error(
+        '[PrismaDemoRepository] Demo model not found. Run: npx prisma generate'
+      )
+    }
+    await this.prisma.demo.delete({ where: { id } })
   }
 
   // 将 Prisma 模型转换为领域模型

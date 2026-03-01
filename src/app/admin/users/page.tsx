@@ -11,12 +11,12 @@ import {
 } from '@/components/ui/card'
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string
     pageSize?: string
     search?: string
     role?: string
-  }
+  }>
 }
 
 export default async function AdminUsersPage({ searchParams }: PageProps) {
@@ -28,10 +28,11 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
     redirect('/')
   }
 
-  const page = parseInt(searchParams.page || '1')
-  const pageSize = parseInt(searchParams.pageSize || '10')
-  const search = searchParams.search || undefined
-  const role = (searchParams.role as 'USER' | 'ADMIN') || undefined
+  const params = await searchParams
+  const page = parseInt(params.page || '1')
+  const pageSize = parseInt(params.pageSize || '10')
+  const search = params.search || undefined
+  const role = (params.role as 'USER' | 'ADMIN') || undefined
 
   const result = await listUsers({ page, pageSize, search, role })
 
