@@ -44,6 +44,20 @@ CREATE TABLE "verification_tokens" (
     "expires" DATETIME NOT NULL
 );
 
+-- CreateTable
+CREATE TABLE "demos" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "category" TEXT NOT NULL,
+    "subcategory" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "iframeUrl" TEXT NOT NULL,
+    "markdownUrl" TEXT,
+    "techStack" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
@@ -58,3 +72,6 @@ CREATE UNIQUE INDEX "sessions_sessionToken_key" ON "sessions"("sessionToken");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "verification_tokens_identifier_token_key" ON "verification_tokens"("identifier", "token");
+
+-- CreateIndex
+CREATE INDEX "demos_category_subcategory_idx" ON "demos"("category", "subcategory");
